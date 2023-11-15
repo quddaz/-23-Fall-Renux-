@@ -23,10 +23,33 @@ int main(int argc, char *argv[]) {
 	addr = mmap(NULL, statbuf.st_size,
 			PROT_READ|PROT_WRITE,
 		MAP_SHARED, fd, (off_t)0);
+	int pid;
+	switch (pid = fork()) {
+		case 0 : 
+		printf("1. Child Process : addr=%s", (char*)addr);
+		sleep(1);
+		((char*)addr)[0] = 'x';
+		printf("2. Child Process : addr=%s",(char*)addr);
+		sleep(2);
+		printf("3. Child Process : addr=%s", (char*)addr);
+		break;
+	default :
+		printf("1. Parent process : addr=%s", (char*)addr);
+		sleep(2);
+		printf("2. Parent process : addr=%s", (char*)addr);
+		((char*)addr)[1] = 'y';
+		printf("3. Parent process : addr=%s", (char*)addr);
+		break;
+	}
 	if (addr == MAP_FAILED) {
 		perror("mmap");
 		exit(1);
 	}
 	close(fd);
 	printf("%s", (char*)addr);
+
+	if (munmap(addr, statbuf.st_size) == -1) {
+		perror("munmap");
+		exit(1);
+	}
 }
