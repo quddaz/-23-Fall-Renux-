@@ -7,8 +7,8 @@ int main(int argc, char* argv[])
 {
 	char buf[50];
 	struct mq_attr attr;
-	attr.mq_maxmsg = 10; // 최대 메시지 개수
-	attr.mq_msgsize = 50; // 메시지의 최대 길이
+	attr.mq_maxmsg = 10; 
+	attr.mq_msgsize = 50;
 	mqd_t mq;
 	mq = mq_open("/mymq", O_RDWR | O_CREAT, 0666, &attr);
 	if(mq == -1){
